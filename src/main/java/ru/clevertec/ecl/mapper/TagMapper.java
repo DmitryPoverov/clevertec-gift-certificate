@@ -1,9 +1,6 @@
 package ru.clevertec.ecl.mapper;
 
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.*;
 import ru.clevertec.ecl.dto.TagDto;
 import ru.clevertec.ecl.entities.Tag;
 
@@ -14,6 +11,7 @@ public interface TagMapper {
 
     TagDto tagToDto(Tag tag);
 
+    @Mapping(target = "id", ignore = true)
     Tag dtoToTag(TagDto dto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

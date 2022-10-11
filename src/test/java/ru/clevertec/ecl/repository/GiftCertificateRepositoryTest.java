@@ -67,4 +67,18 @@ class GiftCertificateRepositoryTest {
 
         assertNotEquals(0 ,save.getId());
     }
+
+    @Test
+    @DisplayName("5: findCertificatesByTagName() from GiftCertificate-repository")
+    public void testShouldFindCertificateByTagNameAndReturnNotNull() {
+        List<GiftCertificate> certificates = repository.findCertificatesByTagName("extreme_test");
+        assertEquals(2, certificates.size());
+    }
+
+    @Test
+    @DisplayName("6: findCertificatesByPartOfNameOrDescription() from GiftCertificate-repository")
+    public void testShouldFindCertificatePartOfNameOrDescription() {
+        List<GiftCertificate> certificates = repository.findCertificatesByPartOfNameOrDescription("as", "as");
+        assertEquals(2, certificates.size());
+    }
 }

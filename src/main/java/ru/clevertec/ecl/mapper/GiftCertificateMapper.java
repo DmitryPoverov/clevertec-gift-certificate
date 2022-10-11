@@ -13,6 +13,7 @@ public interface GiftCertificateMapper {
 
     GiftCertificateDto giftCertificateToDto(GiftCertificate certificate);
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "createDate", expression = "java(LocalDateTime.now())")
     @Mapping(target = "lastUpdateDate", expression = "java(LocalDateTime.now())")
     GiftCertificate dtoToGiftCertificate(GiftCertificateDto dto);

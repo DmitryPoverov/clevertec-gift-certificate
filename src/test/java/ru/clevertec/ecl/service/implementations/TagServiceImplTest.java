@@ -109,7 +109,7 @@ class TagServiceImplTest {
         given(mapper.tagToDto(any()))
                 .willReturn(DTO_ID_1_UPDATED);
 
-        TagDto updateTag = service.updateTag(DTO_ID_1_UPDATED);
+        TagDto updateTag = service.updateTag(ID_ONE, DTO_ID_1_UPDATED);
         Assertions.assertEquals(DTO_ID_1_UPDATED, updateTag);
     }
 

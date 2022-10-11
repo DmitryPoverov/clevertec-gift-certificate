@@ -29,10 +29,19 @@ public class GiftCertificateController {
         return ResponseEntity.ok(dtoById);
     }
 
-    @GetMapping("/tag-name/{name}")
+    @GetMapping("/tag-names/{name}")
     public ResponseEntity<List<GiftCertificateDto>> findGiftCertificatesByOneTagName(@PathVariable String name) {
         List<GiftCertificateDto> certificateByTagName = service.findGiftCertificatesByOneTagName(name);
         return ResponseEntity.ok(certificateByTagName);
+    }
+
+    @GetMapping("/names-or-descriptions")
+    public ResponseEntity<List<GiftCertificateDto>> certificatesByNameOrDescription(@RequestParam(required = false)
+                                                                                    String partName,
+                                                                                    @RequestParam(required = false)
+                                                                                    String description) {
+        List<GiftCertificateDto> certificates = service.findCertificatesByPartOfNameOrDescription(partName, description);
+        return ResponseEntity.ok(certificates);
     }
 
     @PostMapping
@@ -41,9 +50,9 @@ public class GiftCertificateController {
         return ResponseEntity.ok(certificateDto);
     }
 
-    @PatchMapping
-    public ResponseEntity<GiftCertificateDto> updateCertificate(@RequestBody GiftCertificateDto dto) {
-        GiftCertificateDto certificateDto = service.updateCertificate(dto);
+    @PatchMapping("/{id}")
+    public ResponseEntity<GiftCertificateDto> updateCertificate(@PathVariable long id, @RequestBody GiftCertificateDto dto) {
+        GiftCertificateDto certificateDto = service.updateCertificate(id, dto);
         return ResponseEntity.ok(certificateDto);
     }
 

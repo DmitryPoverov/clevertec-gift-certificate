@@ -164,7 +164,7 @@ class GiftCertificateServiceImplTest {
         given(repository.save(certificateId1Upd))
                 .willReturn(certificateId1Upd);
 
-        GiftCertificateDto dto = service.updateCertificate(certificateId1DtoUpd);
+        GiftCertificateDto dto = service.updateCertificate(ID_ONE, certificateId1DtoUpd);
         Assertions.assertEquals(certificateId1DtoUpdated, dto);
     }
 

@@ -36,9 +36,9 @@ public class TagController {
         return ResponseEntity.status(HttpStatus.CREATED).body(tagDto);
     }
 
-    @PatchMapping
-    public ResponseEntity<TagDto> updateTag(@RequestBody TagDto dto) {
-        TagDto tagDto = service.updateTag(dto);
+    @PatchMapping("/{id}")
+    public ResponseEntity<TagDto> updateTag(@PathVariable long id, @RequestBody TagDto dto) {
+        TagDto tagDto = service.updateTag(id, dto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(tagDto);
     }
 

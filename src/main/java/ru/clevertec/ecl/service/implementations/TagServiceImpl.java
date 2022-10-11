@@ -48,10 +48,10 @@ public class TagServiceImpl implements TagService {
 
     @Transactional
     @Override
-    public TagDto updateTag(TagDto dto) {
+    public TagDto updateTag(long id, TagDto dto) {
 
-        Tag tagFromDB = repository.findById(dto.getId())
-                .orElseThrow(() -> new NotFountException("tag", "id", dto.getId()));
+        Tag tagFromDB = repository.findById(id)
+                .orElseThrow(() -> new NotFountException("tag", "id", id));
 
         if (repository.existsByName(dto.getName())) {                    // тимофей ориентировался на стандартные
             throw new DuplicateException("tag", "name", dto.getName());

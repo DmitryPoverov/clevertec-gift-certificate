@@ -50,6 +50,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
+    public List<GiftCertificateDto> findCertificatesByPartOfNameOrDescription(String partName, String description) {
+        return repository.findCertificatesByPartOfNameOrDescription(partName, description)
+                .stream()
+                .map(certificateMapper::giftCertificateToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
     public GiftCertificateDto saveCertificate(GiftCertificateDto dto) {
 
@@ -72,9 +80,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     @Transactional
-    public GiftCertificateDto updateCertificate(GiftCertificateDto dto) {
-        GiftCertificate certificateFromDB = repository.findById(dto.getId())
-                .orElseThrow(() -> new NotFountException("gift certificate", "id", dto.getId()));
+    public GiftCertificateDto updateCertificate(long id, GiftCertificateDto dto) {
+        GiftCertificate certificateFromDB = repository.findById(id)
+                .orElseThrow(() -> new NotFountException("gift certificate", "id", id));
 
         if (repository.existsByName(dto.getName())) {
             throw new DuplicateException("gift certificate", "name", dto.getName());

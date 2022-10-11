@@ -14,7 +14,7 @@ public interface TagService {
 
     TagDto saveTag(TagDto dto);
 
-    TagDto updateTag(TagDto dto);
+    TagDto updateTag(long id, TagDto dto);
 
     void deleteTag(Long id);
 
