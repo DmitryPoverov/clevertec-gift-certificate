@@ -11,6 +11,8 @@ public interface GiftCertificateService {
 
     GiftCertificateDto findCertificateById(Long id);
 
+    List<GiftCertificateDto> findGiftCertificatesByOneTagName(String name);
+
     GiftCertificateDto saveCertificate(GiftCertificateDto dto);
 
     GiftCertificateDto updateCertificate(GiftCertificateDto dto);

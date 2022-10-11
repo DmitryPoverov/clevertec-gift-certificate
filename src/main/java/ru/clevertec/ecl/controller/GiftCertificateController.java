@@ -29,6 +29,12 @@ public class GiftCertificateController {
         return ResponseEntity.ok(dtoById);
     }
 
+    @GetMapping("/tag-name/{name}")
+    public ResponseEntity<List<GiftCertificateDto>> findGiftCertificatesByOneTagName(@PathVariable String name) {
+        List<GiftCertificateDto> certificateByTagName = service.findGiftCertificatesByOneTagName(name);
+        return ResponseEntity.ok(certificateByTagName);
+    }
+
     @PostMapping
     public ResponseEntity<GiftCertificateDto> addNewCertificate(@RequestBody GiftCertificateDto dto) {
         GiftCertificateDto certificateDto = service.saveCertificate(dto);

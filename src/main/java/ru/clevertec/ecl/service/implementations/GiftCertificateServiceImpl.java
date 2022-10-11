@@ -1,7 +1,6 @@
 package ru.clevertec.ecl.service.implementations;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,10 +29,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public List<GiftCertificateDto> findAllCertificates(Pageable pageable) {
-        Page<GiftCertificate> all = repository.findAll(pageable);
-        Page<GiftCertificateDto> map = all
-                .map(certificateMapper::giftCertificateToDto);
-        return map.getContent();
+        return repository.findAll(pageable)
+                .map(certificateMapper::giftCertificateToDto)
+                .getContent();
     }
 
     @Override
@@ -41,6 +39,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return repository.findById(id)
                 .map(certificateMapper::giftCertificateToDto)
                 .orElseThrow(() -> new NotFountException("gift certificate", "id", id));
+    }
+
+    @Override
+    public List<GiftCertificateDto> findGiftCertificatesByOneTagName(String name) {
+        return repository.findCertificatesByTagName(name)
+                .stream()
+                .map(certificateMapper::giftCertificateToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
