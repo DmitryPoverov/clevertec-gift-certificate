@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 public interface GiftCertificateRepository extends JpaRepository<GiftCertificate, Long>,
-        PagingAndSortingRepository<GiftCertificate, Long> {
+                                                   PagingAndSortingRepository<GiftCertificate, Long> {
 
     boolean existsByName(String name);
 

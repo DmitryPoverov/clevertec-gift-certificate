@@ -6,7 +6,8 @@ import ru.clevertec.ecl.entities.Tag;
 
 import static org.mapstruct.MappingConstants.ComponentModel;
 
-@Mapper(componentModel = ComponentModel.SPRING)
+@Mapper(componentModel = ComponentModel.SPRING,
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.SET_TO_DEFAULT)
 public interface TagMapper {
 
     TagDto tagToDto(Tag tag);

@@ -7,8 +7,8 @@ import ru.clevertec.ecl.entities.GiftCertificate;
 import java.time.LocalDateTime;
 
 @Mapper(componentModel = "spring",
-//        uses = TagMapper.class,
-        imports = LocalDateTime.class)
+        imports = LocalDateTime.class,
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.SET_TO_DEFAULT)
 public interface GiftCertificateMapper {
 
     GiftCertificateDto giftCertificateToDto(GiftCertificate certificate);
