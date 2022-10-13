@@ -37,14 +37,14 @@ public class GiftCertificateController {
                                         @RequestParam(required = false) String partOfName,
                                         @RequestParam(required = false) String partOfDescription,
                                         @RequestParam(required = false, defaultValue = "false") boolean sortByName,
-                                        @RequestParam(required = false, defaultValue = "true") boolean ascending) {
+                                        @RequestParam(required = false, defaultValue = "true") boolean sortAscending) {
         List<GiftCertificateDto> certificates = service.findCertificatesWithParameters(
                 SearchingDto.builder()
                 .tagName(tagName)
                 .partOfName(partOfName)
                 .partOfDescription(partOfDescription)
                 .sortByName(sortByName)
-                .sortAscending(ascending).build(), pageable);
+                .sortAscending(sortAscending).build(), pageable);
         return ResponseEntity.ok(certificates);
     }
 
