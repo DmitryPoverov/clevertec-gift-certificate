@@ -14,6 +14,7 @@ import ru.clevertec.ecl.entities.GiftCertificate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -64,7 +65,6 @@ class GiftCertificateRepositoryTest {
                 .lastUpdateDate(LocalDateTime.parse("2022-09-27T11:11")).build();
 
         GiftCertificate save = repository.save(certificate);
-
         assertNotEquals(0 ,save.getId());
     }
 
@@ -77,8 +77,16 @@ class GiftCertificateRepositoryTest {
 
     @Test
     @DisplayName("6: findCertificatesByPartOfNameOrDescription() from GiftCertificate-repository")
-    public void testShouldFindCertificatePartOfNameOrDescription() {
-        List<GiftCertificate> certificates = repository.findCertificatesByPartOfNameOrDescription("as", "as");
+    public void testShouldFindCertificateByPartOfNameOrDescription() {
+        List<GiftCertificate> certificates = repository.findCertificatesWithParameters
+                ("sport_test", "al", null,  Pageable.ofSize(10)).getContent();
         assertEquals(2, certificates.size());
+    }
+
+    @Test
+    @DisplayName("7: findCertificatesByAFewTagNames() from GiftCertificate-repository")
+    public void testShouldFindCertificateByTagsAndNameIsIn() {
+        List<GiftCertificate> certificates = repository.findByTags_NameIsIn(Arrays.asList("extreme_test", "animal_test"));
+        assertEquals(3, certificates.size());
     }
 }

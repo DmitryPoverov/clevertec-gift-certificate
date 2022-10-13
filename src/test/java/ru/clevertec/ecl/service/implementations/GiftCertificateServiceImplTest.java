@@ -124,7 +124,7 @@ class GiftCertificateServiceImplTest {
         given(repository.findAll(pageable))
                 .willReturn(CERTIFICATE_PAGE);
 
-        List<GiftCertificateDto> list = service.findAllCertificates(pageable);
+        List<GiftCertificateDto> list = service.findCertificates(pageable);
         Assertions.assertEquals(CERTIFICATE_DTO_LIST, list);
     }
 

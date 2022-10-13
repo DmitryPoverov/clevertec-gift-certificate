@@ -6,6 +6,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.clevertec.ecl.dto.GiftCertificateDto;
+import ru.clevertec.ecl.dto.SearchingDto;
 import ru.clevertec.ecl.service.interfaces.GiftCertificateService;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class GiftCertificateController {
 
     @GetMapping
     public ResponseEntity<List<GiftCertificateDto>> findAllCertificates(@PageableDefault Pageable pageable) {
-        List<GiftCertificateDto> allCertificates = service.findAllCertificates(pageable);
+        List<GiftCertificateDto> allCertificates = service.findCertificates(pageable);
         return ResponseEntity.ok(allCertificates);
     }
 
@@ -29,19 +30,28 @@ public class GiftCertificateController {
         return ResponseEntity.ok(dtoById);
     }
 
-    @GetMapping("/tag-names/{name}")
-    public ResponseEntity<List<GiftCertificateDto>> findGiftCertificatesByOneTagName(@PathVariable String name) {
-        List<GiftCertificateDto> certificateByTagName = service.findGiftCertificatesByOneTagName(name);
-        return ResponseEntity.ok(certificateByTagName);
+    @GetMapping("/parameters")
+    public ResponseEntity<List<GiftCertificateDto>> findCertificatesWithParameters
+                                       (@PageableDefault Pageable pageable,
+                                        @RequestParam(required = false) String tagName,
+                                        @RequestParam(required = false) String partOfName,
+                                        @RequestParam(required = false) String partOfDescription,
+                                        @RequestParam(required = false, defaultValue = "false") boolean sortByName,
+                                        @RequestParam(required = false, defaultValue = "true") boolean ascending) {
+        List<GiftCertificateDto> certificates = service.findCertificatesWithParameters(
+                SearchingDto.builder()
+                .tagName(tagName)
+                .partOfName(partOfName)
+                .partOfDescription(partOfDescription)
+                .sortByName(sortByName)
+                .sortAscending(ascending).build(), pageable);
+        return ResponseEntity.ok(certificates);
     }
 
-    @GetMapping("/names-or-descriptions")
-    public ResponseEntity<List<GiftCertificateDto>> certificatesByNameOrDescription(@RequestParam(required = false)
-                                                                                    String partName,
-                                                                                    @RequestParam(required = false)
-                                                                                    String description) {
-        List<GiftCertificateDto> certificates = service.findCertificatesByPartOfNameOrDescription(partName, description);
-        return ResponseEntity.ok(certificates);
+    @GetMapping("/tag-names/{tagName}")
+    public ResponseEntity<List<GiftCertificateDto>> findGiftCertificatesByOneTagName(@PathVariable String tagName) {
+        List<GiftCertificateDto> certificateByTagName = service.findGiftCertificatesByOneTagName(tagName);
+        return ResponseEntity.ok(certificateByTagName);
     }
 
     @PostMapping

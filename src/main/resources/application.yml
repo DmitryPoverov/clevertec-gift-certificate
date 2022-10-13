@@ -3,7 +3,7 @@ server:
 
 logging:
   file:
-    name: poverovLog.log
+    name: gift-certificate.log
     path: /
 
 #spring:

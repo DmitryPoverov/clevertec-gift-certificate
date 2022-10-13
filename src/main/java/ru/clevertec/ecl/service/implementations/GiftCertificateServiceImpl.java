@@ -1,10 +1,13 @@
 package ru.clevertec.ecl.service.implementations;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.ecl.dto.GiftCertificateDto;
+import ru.clevertec.ecl.dto.SearchingDto;
 import ru.clevertec.ecl.dto.TagDto;
 import ru.clevertec.ecl.entities.GiftCertificate;
 import ru.clevertec.ecl.entities.Tag;
@@ -28,33 +31,60 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final TagService tagService;
 
     @Override
-    public List<GiftCertificateDto> findAllCertificates(Pageable pageable) {
+    public List<GiftCertificateDto> findCertificates(Pageable pageable) {
         return repository.findAll(pageable)
                 .map(certificateMapper::giftCertificateToDto)
                 .getContent();
     }
 
     @Override
-    public GiftCertificateDto findCertificateById(Long id) {
+    public GiftCertificateDto findCertificateById(long id) {
         return repository.findById(id)
                 .map(certificateMapper::giftCertificateToDto)
                 .orElseThrow(() -> new NotFountException("gift certificate", "id", id));
     }
 
     @Override
-    public List<GiftCertificateDto> findGiftCertificatesByOneTagName(String name) {
-        return repository.findCertificatesByTagName(name)
+    public List<GiftCertificateDto> findGiftCertificatesByOneTagName(String tagName) {
+        return repository.findCertificatesByTagName(tagName)
                 .stream()
                 .map(certificateMapper::giftCertificateToDto)
                 .collect(Collectors.toList());
     }
 
+
     @Override
-    public List<GiftCertificateDto> findCertificatesByPartOfNameOrDescription(String partName, String description) {
-        return repository.findCertificatesByPartOfNameOrDescription(partName, description)
+    public List<GiftCertificateDto> findCertificatesWithParameters(SearchingDto dto, Pageable pageable) {
+
+        pageable = handlePageable(dto, pageable);
+
+        return repository.findCertificatesWithParameters(dto.getTagName(), dto.getPartOfName(),
+                                                         dto.getPartOfDescription(), pageable)
+                .getContent()
                 .stream()
                 .map(certificateMapper::giftCertificateToDto)
                 .collect(Collectors.toList());
+    }
+
+    private static Pageable handlePageable(SearchingDto dto, Pageable pageable) {
+        if (dto.isSortByName()) {
+            if (dto.isSortAscending()) {
+                pageable = PageRequest
+                        .of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("name").ascending());
+            } else {
+                pageable = PageRequest
+                        .of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("name").descending());
+            }
+        } else {
+            if (dto.isSortAscending()) {
+                pageable = PageRequest
+                        .of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("id").ascending());
+            } else {
+                pageable = PageRequest
+                        .of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("id").descending());
+            }
+        }
+        return pageable;
     }
 
     @Override
