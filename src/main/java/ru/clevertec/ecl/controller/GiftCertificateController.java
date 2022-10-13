@@ -69,6 +69,6 @@ public class GiftCertificateController {
     @DeleteMapping
     public ResponseEntity<Void> deleteCertificate(@RequestBody long id) {
         service.deleteCertificate(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

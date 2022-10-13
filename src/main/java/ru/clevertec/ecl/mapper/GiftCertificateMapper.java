@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Mapper(componentModel = "spring",
         imports = LocalDateTime.class,
-        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.SET_TO_DEFAULT)
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface GiftCertificateMapper {
 
     GiftCertificateDto giftCertificateToDto(GiftCertificate certificate);

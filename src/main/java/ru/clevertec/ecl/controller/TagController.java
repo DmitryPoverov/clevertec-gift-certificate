@@ -45,6 +45,6 @@ public class TagController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTag(@PathVariable long id) {
         service.deleteTag(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
