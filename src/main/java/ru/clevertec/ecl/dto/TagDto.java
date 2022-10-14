@@ -1,17 +1,15 @@
 package ru.clevertec.ecl.dto;
 
 import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.Value;
 
 /**
  * A DTO for the {@link ru.clevertec.ecl.entities.Tag} entity
  */
-@Data
+@Value
 @Builder
-@ToString
 public class TagDto {
 
-    private long id;
-    private String name;
+    long id;
+    String name;
 }

@@ -1,12 +1,12 @@
 package ru.clevertec.ecl.dto;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 @Builder
 public class ErrorMessage {
 
-    private String errorMessage;
-    private String errorCode;
+    String errorMessage;
+    String errorCode;
 }
