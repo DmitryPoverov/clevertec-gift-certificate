@@ -1,0 +1,11 @@
+server:
+  port: 8083
+
+logging:
+  file:
+    name: gift-certificate.log
+    path: /
+
+#spring:
+#  profiles:
+#    active:
