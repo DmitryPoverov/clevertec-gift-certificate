@@ -3,12 +3,14 @@ package ru.clevertec.ecl.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.clevertec.ecl.entities.GiftCertificate;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -20,7 +22,7 @@ public interface GiftCertificateRepository extends JpaRepository<GiftCertificate
     @Query(value = "FROM GiftCertificate gc " +
                    "JOIN gc.tags t " +
                    "WHERE t.name =:tagName")
-    List<GiftCertificate> findCertificatesByTagName(@Param("tagName")String tagName);
+    List<GiftCertificate> findCertificatesByTagName(@Param("tagName") String tagName);
 
     List<GiftCertificate> findByTags_NameIsIn(List<String> tagNames);
 
@@ -36,7 +38,27 @@ public interface GiftCertificateRepository extends JpaRepository<GiftCertificate
                    "(gc.description ILIKE concat('%', :partOfDescription, '%') OR :partOfDescription IS NULL)",
             nativeQuery = true)
     Page<GiftCertificate> findCertificatesWithParameters(@Param("tagName") String tagName,
-                                                               @Param("partOfName") String partOfName,
-                                                               @Param("partOfDescription") String partOfDescription,
-                                                               Pageable pageable);
+                                                         @Param("partOfName") String partOfName,
+                                                         @Param("partOfDescription") String partOfDescription,
+                                                         Pageable pageable);
+
+    @Modifying
+    @Query(value = "UPDATE GiftCertificate SET name = :name WHERE id = :id")
+    void updateGiftCertificateName(@Param("name") String name,
+                                   @Param("id") long id);
+
+    @Modifying
+    @Query(value = "UPDATE GiftCertificate SET description = :description WHERE id = :id")
+    void updateGiftCertificateDescription(@Param("description") String description,
+                                          @Param("id") long id);
+
+    @Modifying
+    @Query(value = "UPDATE GiftCertificate SET price = :price WHERE id = :id")
+    void updateGiftCertificatePrice(@Param("price") BigDecimal price,
+                                    @Param("id") long id);
+
+    @Modifying
+    @Query(value = "UPDATE GiftCertificate SET duration = :duration WHERE id = :id")
+    void updateGiftCertificateDuration(@Param("duration") long duration,
+                                    @Param("id") long id);
 }

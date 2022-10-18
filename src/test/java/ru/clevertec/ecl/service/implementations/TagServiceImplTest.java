@@ -26,7 +26,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class TagServiceImplTest {
 
-//    private static final TagMapper mapper = Mappers.getMapper(TagMapper.class);
     private TagMapper mapper;
     private TagServiceImpl service;
     private TagRepository repository;

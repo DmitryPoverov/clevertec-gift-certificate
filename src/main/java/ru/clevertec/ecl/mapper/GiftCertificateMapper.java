@@ -19,6 +19,7 @@ public interface GiftCertificateMapper {
     GiftCertificate dtoToGiftCertificate(GiftCertificateDto dto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "lastUpdateDate", expression = "java(LocalDateTime.now())")
     void updateFromDto(@MappingTarget GiftCertificate certificate, GiftCertificateDto dto);
 }
