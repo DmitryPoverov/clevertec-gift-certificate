@@ -19,64 +19,71 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class TagServiceImpl implements TagService {
 
-    private final TagRepository repository;
-    private final TagMapper mapper;
+    private final TagRepository tagRepository;
+    private final TagMapper tagMapper;
 
     @Override
     public List<TagDto> findAllTags(Pageable pageable) {
-        return repository.findAll(pageable)
-                .map(mapper::tagToDto).getContent();
+        return tagRepository.findAll(pageable)
+                .map(tagMapper::tagToDto).getContent();
     }
 
     @Override
     public TagDto findTagById(Long id) {
-        return repository.findById(id)
-                .map(mapper::tagToDto)
+        return tagRepository.findById(id)
+                .map(tagMapper::tagToDto)
                 .orElseThrow(() -> new NotFountException("tag", "id", id));
     }
 
     @Transactional
     @Override
     public TagDto saveTag(TagDto dto) {
-        if (repository.existsByName(dto.getName())) {
+        if (tagRepository.existsByName(dto.getName())) {
             throw new DuplicateException("tag", "name", dto.getName());
         }
-        Tag tagToSave = mapper.dtoToTag(dto);
-        Tag savedTag = repository.save(tagToSave);
-        return mapper.tagToDto(savedTag);
+        Tag tagToSave = tagMapper.dtoToTag(dto);
+        Tag savedTag = tagRepository.save(tagToSave);
+        return tagMapper.tagToDto(savedTag);
     }
 
     @Transactional
     @Override
     public TagDto updateTag(long id, TagDto dto) {
 
-        Tag tagFromDB = repository.findById(id)
+        Tag tagFromDB = tagRepository.findById(id)
                 .orElseThrow(() -> new NotFountException("tag", "id", id));
 
-        if (repository.existsByName(dto.getName())) {                    // тимофей ориентировался на стандартные
+        if (tagRepository.existsByName(dto.getName())) {                    // тимофей ориентировался на стандартные
             throw new DuplicateException("tag", "name", dto.getName());
         }
 
-        mapper.updateFromDto(tagFromDB, dto);
+        tagMapper.updateFromDto(tagFromDB, dto);
 
-        Tag savedTad = repository.save(tagFromDB);
-        return mapper.tagToDto(savedTad);
+        Tag savedTad = tagRepository.save(tagFromDB);
+        return tagMapper.tagToDto(savedTad);
     }
 
     @Transactional
     @Override
     public void deleteTag(Long id) {
-        Tag tagFromDB = repository.findById(id)
+        Tag tagFromDB = tagRepository.findById(id)
                 .orElseThrow(() -> new NotFountException("tag", "id", id));
-        repository.delete(tagFromDB);
+        tagRepository.delete(tagFromDB);
     }
 
     @Override
     @Transactional
     public Tag findByNameOrSave(TagDto dto) {
-        return repository.findByName(dto.getName())
-                .orElseGet(() -> repository.save(Tag.builder()
+        return tagRepository.findByName(dto.getName())
+                .orElseGet(() -> tagRepository.save(Tag.builder()
                                                     .name(dto.getName())
                                                     .build()));
+    }
+
+    @Override
+    public TagDto findMostPopularAndExpensiveTag() {
+        return tagRepository.findMostWidelyUsedTagWithHighestCost()
+                .map(tagMapper::tagToDto)
+                .orElseThrow(() -> new NotFountException("tag", "most popular tag", null));
     }
 }
