@@ -39,6 +39,16 @@ public class UserServiceImpl implements UserService {
     public UserDto findUserByNickName(String nickName) {
         return userRepository.findUserByNickName(nickName)
                 .map(userMapper::userToDto)
-                .orElseThrow(() -> new NotFountException("user", "name", nickName));
+                .orElseThrow(() -> new NotFountException("user", "nickname", nickName));
+    }
+
+    @Override
+    public User findUserByNickNameOrSave(UserDto dto) {
+        return userRepository.findUserByNickName(dto.getNickName())
+                .orElseGet(() -> User.builder()
+                        .nickName(dto.getNickName())
+                        .userName(dto.getUserName())
+                        .orderList(dto.getOrderList())
+                        .build());
     }
 }

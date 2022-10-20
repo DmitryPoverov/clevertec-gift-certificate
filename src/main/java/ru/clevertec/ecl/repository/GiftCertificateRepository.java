@@ -12,12 +12,15 @@ import ru.clevertec.ecl.entities.GiftCertificate;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface GiftCertificateRepository extends JpaRepository<GiftCertificate, Long>,
                                                    PagingAndSortingRepository<GiftCertificate, Long> {
 
     boolean existsByName(String name);
+
+    Optional<GiftCertificate> findByName(String name);
 
     @Query(value = "FROM GiftCertificate gc " +
                    "JOIN gc.tags t " +

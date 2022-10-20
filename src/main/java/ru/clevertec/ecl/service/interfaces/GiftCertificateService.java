@@ -2,6 +2,7 @@ package ru.clevertec.ecl.service.interfaces;
 
 import org.springframework.data.domain.Pageable;
 import ru.clevertec.ecl.dto.*;
+import ru.clevertec.ecl.entities.GiftCertificate;
 
 import java.util.List;
 
@@ -28,4 +29,6 @@ public interface GiftCertificateService {
     GiftCertificateDto updateCertificateDuration(long id, GiftCertificateDurationDto dto);
 
     void deleteCertificate(Long id);
+
+    GiftCertificate findByNameOrSave(GiftCertificateDto dto);
 }

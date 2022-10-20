@@ -3,6 +3,7 @@ package ru.clevertec.ecl.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+import ru.clevertec.ecl.dto.OrderCostAndDateDto;
 import ru.clevertec.ecl.dto.OrderDto;
 import ru.clevertec.ecl.entities.Order;
 
@@ -17,4 +18,6 @@ public interface OrderMapper {
     Order dtoToOrder (OrderDto dto);
 
     OrderDto orderToDto(Order order);
+
+    OrderCostAndDateDto orderToCostAndDateDto(Order order);
 }

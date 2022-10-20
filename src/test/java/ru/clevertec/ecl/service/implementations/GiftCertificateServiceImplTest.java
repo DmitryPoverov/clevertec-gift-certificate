@@ -16,6 +16,7 @@ import ru.clevertec.ecl.dto.TagDto;
 import ru.clevertec.ecl.entities.GiftCertificate;
 import ru.clevertec.ecl.entities.Tag;
 import ru.clevertec.ecl.mapper.GiftCertificateMapper;
+import ru.clevertec.ecl.mapper.TagMapper;
 import ru.clevertec.ecl.repository.GiftCertificateRepository;
 import ru.clevertec.ecl.service.interfaces.GiftCertificateService;
 import ru.clevertec.ecl.service.interfaces.TagService;
@@ -36,6 +37,7 @@ class GiftCertificateServiceImplTest {
     private final GiftCertificateMapper certificateMapper = Mappers.getMapper(GiftCertificateMapper.class);
     private GiftCertificateRepository repository;
     private TagService tagService;
+    private TagMapper tagMapper;
     private GiftCertificateService service;
 
     private final long ID_ONE = 1L;
@@ -115,7 +117,7 @@ class GiftCertificateServiceImplTest {
     void beforeEach() {
         repository = Mockito.mock(GiftCertificateRepository.class);
         tagService = Mockito.mock(TagServiceImpl.class);
-        service = new GiftCertificateServiceImpl(repository, certificateMapper, tagService);
+        service = new GiftCertificateServiceImpl(repository, certificateMapper, tagService, tagMapper);
     }
 
     @Test

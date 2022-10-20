@@ -12,6 +12,7 @@ import ru.clevertec.ecl.entities.Tag;
 import ru.clevertec.ecl.exception.DuplicateException;
 import ru.clevertec.ecl.exception.NotFountException;
 import ru.clevertec.ecl.mapper.GiftCertificateMapper;
+import ru.clevertec.ecl.mapper.TagMapper;
 import ru.clevertec.ecl.repository.GiftCertificateRepository;
 import ru.clevertec.ecl.service.interfaces.GiftCertificateService;
 import ru.clevertec.ecl.service.interfaces.TagService;
@@ -27,6 +28,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final GiftCertificateRepository certificateRepository;
     private final GiftCertificateMapper certificateMapper;
     private final TagService tagService;
+    private final TagMapper tagMapper;
 
     @Override
     public List<GiftCertificateDto> findCertificates(Pageable pageable) {
@@ -139,6 +141,19 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         GiftCertificate certificateFromDB = findAndReturnCertificateByIdOrThrow(id);
 
         certificateRepository.delete(certificateFromDB);
+    }
+
+    @Override
+    @Transactional
+    public GiftCertificate findByNameOrSave(GiftCertificateDto dto) {
+        return certificateRepository.findByName(dto.getName())
+                .orElseGet(() -> certificateRepository.save(GiftCertificate.builder()
+                                .name(dto.getName())
+                                .description(dto.getDescription())
+                                .price(dto.getPrice())
+                                .duration(dto.getDuration())
+                                .tags(dto.getTags().stream().map(tagMapper::dtoToTag).collect(Collectors.toList()))
+                        .build()));
     }
 
     private GiftCertificate findAndReturnCertificateByIdOrThrow(long id) {

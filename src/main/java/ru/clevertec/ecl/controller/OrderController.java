@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.clevertec.ecl.dto.OrderCostAndDateDto;
 import ru.clevertec.ecl.dto.OrderDto;
 import ru.clevertec.ecl.service.interfaces.OrderService;
 
@@ -29,6 +30,13 @@ public class OrderController {
         return ResponseEntity.ok(allOrders);
     }
 
+    @GetMapping("/users")
+    public ResponseEntity<OrderCostAndDateDto> findOrderByOrderIdAndUserId(@RequestParam long userId,
+                                                                           @RequestParam long orderId) {
+        OrderCostAndDateDto costAndDateOfOrder = orderService.findOrderCostAndDateByUserIdAndOrderId(userId, orderId);
+        return ResponseEntity.ok(costAndDateOfOrder);
+    }
+
     @PostMapping
     public ResponseEntity<OrderDto> createNewOrder(@RequestParam long userId,
                                                    @RequestParam long certificateId) {
@@ -41,5 +49,4 @@ public class OrderController {
         OrderDto newOrder = orderService.createNewOrder(dto);
         return ResponseEntity.ok(newOrder);
     }
-
 }
