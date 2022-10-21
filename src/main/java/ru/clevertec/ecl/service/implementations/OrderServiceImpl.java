@@ -74,6 +74,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderCostAndDateDto findOrderCostAndDateByUserIdAndOrderId(long userId, long orderId) {
         userService.findUserById(userId);
+        findOrderById(orderId);
 
         return orderRepository.findOrderByUserIdAndByOrderId(userId, orderId)
                 .map(orderMapper::orderToCostAndDateDto)
@@ -90,7 +91,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderCostAndDateDto> findAllOrdersByUserId(long userId, Pageable pageable) {
-        return orderRepository.findAllByUserId(userId, pageable)
+        return orderRepository.findAllOrdersByUserId(userId, pageable)
                 .stream()
                 .map(orderMapper::orderToCostAndDateDto)
                 .collect(Collectors.toList());

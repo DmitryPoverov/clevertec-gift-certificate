@@ -28,5 +28,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
            "JOIN User u ON o.user.id = u.id " +
            "WHERE u.id = :userId " +
            "ORDER BY o.id")*/
-    List<Order> findAllByUserId(long id, Pageable pageable);
+    List<Order> findAllOrdersByUserId(long userId, Pageable pageable);
 }
