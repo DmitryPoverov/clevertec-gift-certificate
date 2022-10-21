@@ -31,4 +31,6 @@ public interface GiftCertificateService {
     void deleteCertificate(Long id);
 
     GiftCertificate findByNameOrSave(GiftCertificateDto dto);
+
+    List<GiftCertificateDto> findAllGiftCertificatesByTagNames(List<String> names, Pageable pageable);
 }

@@ -47,10 +47,17 @@ public class GiftCertificateController {
         return ResponseEntity.ok(certificates);
     }
 
-    @GetMapping("/tag-names/{tagName}")
+    @GetMapping("/tags/name/{tagName}")
     public ResponseEntity<List<GiftCertificateDto>> findGiftCertificatesByOneTagName(@PathVariable String tagName) {
         List<GiftCertificateDto> certificateByTagName = service.findGiftCertificatesByOneTagName(tagName);
         return ResponseEntity.ok(certificateByTagName);
+    }
+
+    @GetMapping("/tags/names/{tagNames}")
+    public ResponseEntity<List<GiftCertificateDto>> getCertificateByTagsName(@PathVariable List<String> tagNames,
+                                                                             @PageableDefault Pageable pageable) {
+        List<GiftCertificateDto> certificatesByTagNames = service.findAllGiftCertificatesByTagNames(tagNames, pageable);
+        return ResponseEntity.ok(certificatesByTagNames);
     }
 
     @PostMapping
