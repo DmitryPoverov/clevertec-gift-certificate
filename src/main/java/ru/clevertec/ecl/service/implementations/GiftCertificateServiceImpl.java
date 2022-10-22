@@ -158,27 +158,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public List<GiftCertificateDto> findAllGiftCertificatesByTagNames(List<String> names, Pageable pageable) {
-        return certificateRepository.findGiftCertificatesDistinctByTagsNameIn(names, pageable)
-                .stream()
-                .map(certificateMapper::giftCertificateToDto)
-                .collect(Collectors.toList());
-    }
-
-/*    @Override
-    public List<GiftCertificateDto> findAllGiftCertificatesByTags(List<String> names, Pageable pageable) {
-
-        StringBuilder queryPart;
-
-        names
-                .stream()
-                .
-
-
         return certificateRepository.findGiftCertificatesByTagNames(names, pageable)
                 .stream()
                 .map(certificateMapper::giftCertificateToDto)
                 .collect(Collectors.toList());
-    }*/
+    }
 
     private GiftCertificate findAndReturnCertificateByIdOrThrow(long id) {
         return certificateRepository.findById(id)

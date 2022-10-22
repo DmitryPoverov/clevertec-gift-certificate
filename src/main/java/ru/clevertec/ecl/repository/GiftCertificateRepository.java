@@ -63,5 +63,13 @@ public interface GiftCertificateRepository extends JpaRepository<GiftCertificate
     void updateGiftCertificateDuration(@Param("duration") long duration,
                                        @Param("id") long id);
 
-    Page<GiftCertificate> findGiftCertificatesDistinctByTagsNameIn(List<String> names, Pageable pageable);
+    @Query(value = "SELECT gc.id, gc.name, gc.description, gc.price, gc.duration, gc.create_date, gc.last_update_date, count(*) " +
+                   "FROM gift_certificate gc " +
+                   "         JOIN gift_certificate_tag gct ON gc.id = gct.gift_certificate_id " +
+                   "         JOIN tag t on gct.tag_id = t.id " +
+                   "WHERE t.name IN (:names) " +
+                   "GROUP BY gc.id, gc.name, gc.description, gc.price, gc.duration, gc.create_date, gc.last_update_date " +
+                   "ORDER BY count(*) DESC ;", nativeQuery = true)
+    Page<GiftCertificate> findGiftCertificatesByTagNames(@Param(value = "names") List<String> names,
+                                                         Pageable pageable);
 }
