@@ -8,11 +8,11 @@ import org.springframework.http.HttpStatus;
 @Setter
 public class DuplicateException extends CustomException {
 
-    private static final HttpStatus HTTP_STATUS = HttpStatus.NOT_ACCEPTABLE;
+    private static final HttpStatus HTTP_STATUS_TO_SHOW_IT_USER = HttpStatus.NOT_ACCEPTABLE;
 
     public DuplicateException(String dto, String field, Object value) {
         super(String.format("%s with %s = %s already exists.", dto, field, value),
-                HTTP_STATUS,
-                HTTP_STATUS.value() + "01");
+                HTTP_STATUS_TO_SHOW_IT_USER,
+                HTTP_STATUS_TO_SHOW_IT_USER.value() + "01");
     }
 }

@@ -30,20 +30,20 @@ public class GiftCertificateController {
     }
 
     @GetMapping("/parameters")
-    public ResponseEntity<List<GiftCertificateDto>> findCertificatesWithParameters
-            (@PageableDefault Pageable pageable,
-             @RequestParam(required = false) String tagName,
-             @RequestParam(required = false) String partOfName,
-             @RequestParam(required = false) String partOfDescription,
-             @RequestParam(required = false, defaultValue = "false") boolean sortByName,
-             @RequestParam(required = false, defaultValue = "true") boolean sortAscending) {
-        List<GiftCertificateDto> certificates = service.findCertificatesWithParameters(
-                SearchingDto.builder()
-                        .tagName(tagName)
-                        .partOfName(partOfName)
-                        .partOfDescription(partOfDescription)
-                        .sortByName(sortByName)
-                        .sortAscending(sortAscending).build(), pageable);
+    public ResponseEntity<List<GiftCertificateDto>> findCertificatesWithParameters(
+                                        @PageableDefault Pageable pageable,
+                                        @RequestParam(required = false) String tagName,
+                                        @RequestParam(required = false) String partOfName,
+                                        @RequestParam(required = false) String partOfDescription,
+                                        @RequestParam(required = false, defaultValue = "false") boolean sortByName,
+                                        @RequestParam(required = false, defaultValue = "true") boolean sortAscending) {
+        SearchingDto searchingDto = SearchingDto.builder()
+                .tagName(tagName)
+                .partOfName(partOfName)
+                .partOfDescription(partOfDescription)
+                .sortByName(sortByName)
+                .sortAscending(sortAscending).build();
+        List<GiftCertificateDto> certificates = service.findCertificatesWithParameters(searchingDto, pageable);
         return ResponseEntity.ok(certificates);
     }
 

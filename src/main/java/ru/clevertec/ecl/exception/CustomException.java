@@ -15,6 +15,5 @@ public class CustomException extends RuntimeException {
         super(message);
         this.httpStatus = status;
         this.errorCode = errorCode;
-
     }
 }

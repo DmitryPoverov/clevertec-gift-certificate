@@ -25,6 +25,10 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
+    private static final String ID = "id";
+    private static final String NAME = "gift certificate";
+    private static final String GIFT_CERTIFICATE = "gift certificate";
+
     private final GiftCertificateRepository certificateRepository;
     private final GiftCertificateMapper certificateMapper;
     private final TagService tagService;
@@ -38,44 +42,42 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public GiftCertificateDto findCertificateById(long id) {
-        return certificateRepository.findById(id)
+    public GiftCertificateDto findCertificateById(long giftCertificateId) {
+        return certificateRepository.findById(giftCertificateId)
                 .map(certificateMapper::giftCertificateToDto)
-                .orElseThrow(() -> new NotFountException("gift certificate", "id", id));
+                .orElseThrow(() -> new NotFountException("gift certificate", "id", giftCertificateId));
     }
 
     @Override
     public List<GiftCertificateDto> findGiftCertificatesByOneTagName(String tagName) {
-        return certificateRepository.findCertificatesByTagName(tagName)
-                .stream()
+        return certificateRepository.findCertificatesByTagName(tagName).stream()
                 .map(certificateMapper::giftCertificateToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<GiftCertificateDto> findCertificatesWithParameters(SearchingDto dto, Pageable pageable) {
-        pageable = handlePageable(dto, pageable);
+    public List<GiftCertificateDto> findCertificatesWithParameters(SearchingDto searchingDto, Pageable pageable) {
+        pageable = handlePageable(searchingDto, pageable);
 
-        return certificateRepository.findCertificatesWithParameters(dto.getTagName(), dto.getPartOfName(),
-                                                         dto.getPartOfDescription(), pageable)
-                .getContent()
-                .stream()
+        return certificateRepository.findCertificatesWithParameters(searchingDto.getTagName(), searchingDto.getPartOfName(),
+                        searchingDto.getPartOfDescription(), pageable)
+                .getContent().stream()
                 .map(certificateMapper::giftCertificateToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public GiftCertificateDto saveCertificate(GiftCertificateDto dto) {
-        findCertificateNameOrThrow(dto.getName());
+    public GiftCertificateDto saveCertificate(GiftCertificateDto giftCertificateDto) {
+        findCertificateNameOrThrow(giftCertificateDto.getName());
 
-        List<TagDto> uncheckedTags = dto.getTags();
+        List<TagDto> uncheckedTags = giftCertificateDto.getTags();
 
         List<Tag> collect = uncheckedTags.stream()
                 .map(tagService::findByNameOrSave)
                 .collect(Collectors.toList());
 
-        GiftCertificate certificate = certificateMapper.dtoToGiftCertificate(dto);
+        GiftCertificate certificate = certificateMapper.dtoToGiftCertificate(giftCertificateDto);
         certificate.setTags(collect);
 
         GiftCertificate savedCertificate = certificateRepository.save(certificate);
@@ -84,100 +86,102 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     @Transactional
-    public GiftCertificateDto updateCertificate(long id, GiftCertificateDto dto) {
-        GiftCertificate certificateFromDB = findAndReturnCertificateByIdOrThrow(id);
-        findCertificateNameOrThrow(dto.getName());
+    public GiftCertificateDto updateCertificate(long giftCertificateId, GiftCertificateDto giftCertificateDto) {
+        GiftCertificate certificateFromDB = findAndReturnCertificateByIdOrThrow(giftCertificateId);
+        findCertificateNameOrThrow(giftCertificateDto.getName());
 
-        certificateMapper.updateFromDto(certificateFromDB, dto);
+        certificateMapper.updateFromDto(certificateFromDB, giftCertificateDto);
         GiftCertificate savedCertificate = certificateRepository.save(certificateFromDB);
         return certificateMapper.giftCertificateToDto(savedCertificate);
     }
 
     @Override
     @Transactional
-    public GiftCertificateDto updateCertificateName(long id, GiftCertificateNameDto dto) {
-        GiftCertificate certificate = findAndReturnCertificateByIdOrThrow(id);
-        findCertificateNameOrThrow(dto.getName());
+    public GiftCertificateDto updateCertificateName(long giftCertificateId, GiftCertificateNameDto giftCertificateNameDto) {
+        GiftCertificate certificateFromDB = findAndReturnCertificateByIdOrThrow(giftCertificateId);
+        findCertificateNameOrThrow(giftCertificateNameDto.getName());
 
-        certificate.setName(dto.getName());
-        certificateRepository.updateGiftCertificateName(dto.getName(), id);
-        return certificateMapper.giftCertificateToDto(certificate);
+        certificateFromDB.setName(giftCertificateNameDto.getName());
+        certificateRepository.updateGiftCertificateName(giftCertificateNameDto.getName(), giftCertificateId);
+        return certificateMapper.giftCertificateToDto(certificateFromDB);
     }
 
     @Override
     @Transactional
-    public GiftCertificateDto updateCertificateDescription(long id, GiftCertificateDescriptionDto dto) {
-        GiftCertificate certificate = findAndReturnCertificateByIdOrThrow(id);
+    public GiftCertificateDto updateCertificateDescription(long giftCertificateId, GiftCertificateDescriptionDto giftCertificateDescriptionDto) {
+        GiftCertificate certificateFromDB = findAndReturnCertificateByIdOrThrow(giftCertificateId);
 
-        certificate.setDescription(dto.getDescription());
+        certificateFromDB.setDescription(giftCertificateDescriptionDto.getDescription());
 
-        certificateRepository.updateGiftCertificateDescription(dto.getDescription(), id);
-        return certificateMapper.giftCertificateToDto(certificate);
+        certificateRepository.updateGiftCertificateDescription(giftCertificateDescriptionDto.getDescription(), giftCertificateId);
+        return certificateMapper.giftCertificateToDto(certificateFromDB);
     }
 
     @Override
     @Transactional
-    public GiftCertificateDto updateCertificatePrice(long id, GiftCertificatePriceDto dto) {
-        GiftCertificate certificate = findAndReturnCertificateByIdOrThrow(id);
+    public GiftCertificateDto updateCertificatePrice(long giftCertificateId, GiftCertificatePriceDto giftCertificatePriceDto) {
+        GiftCertificate certificateFromDB = findAndReturnCertificateByIdOrThrow(giftCertificateId);
 
-        certificate.setPrice(dto.getPrice());
-        certificateRepository.updateGiftCertificatePrice(dto.getPrice(), id);
-        return certificateMapper.giftCertificateToDto(certificate);
+        certificateFromDB.setPrice(giftCertificatePriceDto.getPrice());
+        certificateRepository.updateGiftCertificatePrice(giftCertificatePriceDto.getPrice(), giftCertificateId);
+        return certificateMapper.giftCertificateToDto(certificateFromDB);
     }
 
     @Override
     @Transactional
-    public GiftCertificateDto updateCertificateDuration(long id, GiftCertificateDurationDto dto) {
-        GiftCertificate certificate = findAndReturnCertificateByIdOrThrow(id);
+    public GiftCertificateDto updateCertificateDuration(long giftCertificateId, GiftCertificateDurationDto giftCertificateDurationDto) {
+        GiftCertificate certificateFromDB = findAndReturnCertificateByIdOrThrow(giftCertificateId);
 
-        certificate.setDuration(dto.getDuration());
-        certificateRepository.updateGiftCertificateDuration(dto.getDuration(), id);
-        return certificateMapper.giftCertificateToDto(certificate);
+        certificateFromDB.setDuration(giftCertificateDurationDto.getDuration());
+        certificateRepository.updateGiftCertificateDuration(giftCertificateDurationDto.getDuration(), giftCertificateId);
+        return certificateMapper.giftCertificateToDto(certificateFromDB);
     }
 
     @Override
     @Transactional
-    public void deleteCertificate(Long id) {
-        GiftCertificate certificateFromDB = findAndReturnCertificateByIdOrThrow(id);
+    public void deleteCertificate(Long giftCertificateId) {
+        GiftCertificate certificateFromDB = findAndReturnCertificateByIdOrThrow(giftCertificateId);
 
         certificateRepository.delete(certificateFromDB);
     }
 
     @Override
     @Transactional
-    public GiftCertificate findByNameOrSave(GiftCertificateDto dto) {
-        return certificateRepository.findByName(dto.getName())
-                .orElseGet(() -> certificateRepository.save(GiftCertificate.builder()
-                                .name(dto.getName())
-                                .description(dto.getDescription())
-                                .price(dto.getPrice())
-                                .duration(dto.getDuration())
-                                .tags(dto.getTags().stream().map(tagMapper::dtoToTag).collect(Collectors.toList()))
-                        .build()));
+    public GiftCertificate findByNameOrSave(GiftCertificateDto giftCertificateDto) {
+        return certificateRepository.findByName(giftCertificateDto.getName())
+                .orElseGet(() -> certificateRepository.save(
+                        GiftCertificate.builder()
+                                .name(giftCertificateDto.getName())
+                                .description(giftCertificateDto.getDescription())
+                                .price(giftCertificateDto.getPrice())
+                                .duration(giftCertificateDto.getDuration())
+                                .tags(giftCertificateDto.getTags().stream()
+                                        .map(tagMapper::dtoToTag)
+                                        .collect(Collectors.toList()))
+                                .build()));
     }
 
     @Override
-    public List<GiftCertificateDto> findAllGiftCertificatesByTagNames(List<String> names, Pageable pageable) {
-        return certificateRepository.findGiftCertificatesByTagNames(names, pageable)
-                .stream()
+    public List<GiftCertificateDto> findAllGiftCertificatesByTagNames(List<String> tagNames, Pageable pageable) {
+        return certificateRepository.findGiftCertificatesByTagNames(tagNames, pageable).stream()
                 .map(certificateMapper::giftCertificateToDto)
                 .collect(Collectors.toList());
     }
 
-    private GiftCertificate findAndReturnCertificateByIdOrThrow(long id) {
-        return certificateRepository.findById(id)
-                .orElseThrow(() -> new NotFountException("gift certificate", "id", id));
+    private GiftCertificate findAndReturnCertificateByIdOrThrow(long giftCertificateId) {
+        return certificateRepository.findById(giftCertificateId)
+                .orElseThrow(() -> new NotFountException(GIFT_CERTIFICATE, ID, giftCertificateId));
     }
 
-    private void findCertificateNameOrThrow(String name) {
-        if (certificateRepository.existsByName(name)) {
-            throw new DuplicateException("gift certificate", "name", name);
+    private void findCertificateNameOrThrow(String giftCertificateName) {
+        if (certificateRepository.existsByName(giftCertificateName)) {
+            throw new DuplicateException(GIFT_CERTIFICATE, NAME, giftCertificateName);
         }
     }
 
-    private static Pageable handlePageable(SearchingDto dto, Pageable pageable) {
-        if (dto.isSortByName()) {
-            if (dto.isSortAscending()) {
+    private static Pageable handlePageable(SearchingDto searchingDto, Pageable pageable) {
+        if (searchingDto.isSortByName()) {
+            if (searchingDto.isSortAscending()) {
                 pageable = PageRequest
                         .of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("name").ascending());
             } else {
@@ -185,7 +189,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                         .of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("name").descending());
             }
         } else {
-            if (dto.isSortAscending()) {
+            if (searchingDto.isSortAscending()) {
                 pageable = PageRequest
                         .of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("id").ascending());
             } else {

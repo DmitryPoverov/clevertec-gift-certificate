@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "nickName")
-@ToString(exclude = "orderList")
+@ToString
 public class User {
 
     @Id
@@ -29,5 +29,7 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore
+    @Builder.Default
+    @ToString.Exclude
     private List<Order> orderList = new ArrayList<>();
 }

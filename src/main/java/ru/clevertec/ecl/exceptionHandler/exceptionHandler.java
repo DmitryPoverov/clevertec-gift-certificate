@@ -35,5 +35,4 @@ public class exceptionHandler {
                                 .build())
                         .build());
     }
-
 }

@@ -16,18 +16,21 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ActiveProfiles("test")
 class TagServiceImplIntegrationTest {
 
+    private static final long ONE_HUNDRED = 100L;
+    private static final String STRING_RELAX = "relax_test";
+
     @Autowired
     private TagService service;
 
     @Test
     @DisplayName("1: findTagById() from Tag-service negative")
     public void testShouldThrowNotFoundException() {
-        assertThrows(NotFountException.class, () -> service.findTagById(100L));
+        assertThrows(NotFountException.class, () -> service.findTagById(ONE_HUNDRED));
     }
 
     @Test
     @DisplayName("1: existsByName() from Tag-service negative")
     public void testShouldThrowDuplicateException() {
-        assertThrows(DuplicateException.class, () -> service.saveTag(TagDto.builder().name("relax_test").build()));
+        assertThrows(DuplicateException.class, () -> service.saveTag(TagDto.builder().name(STRING_RELAX).build()));
     }
 }

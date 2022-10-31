@@ -23,10 +23,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query(value = "FROM Order o " +
                    "WHERE o.user.nickName = :nickName")
     Page<Order> findAllOrdersByUserNickName(String nickName, Pageable pageable);
-
-/*    @Query("FROM Order o " +
-           "JOIN User u ON o.user.id = u.id " +
-           "WHERE u.id = :userId " +
-           "ORDER BY o.id")*/
+    
     List<Order> findAllOrdersByUserId(long userId, Pageable pageable);
 }

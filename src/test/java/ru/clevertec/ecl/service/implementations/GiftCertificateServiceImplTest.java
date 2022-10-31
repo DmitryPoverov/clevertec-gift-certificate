@@ -34,24 +34,37 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class GiftCertificateServiceImplTest {
 
+    private final TagMapper tagMapper = Mappers.getMapper(TagMapper.class);
     private final GiftCertificateMapper certificateMapper = Mappers.getMapper(GiftCertificateMapper.class);
     private GiftCertificateRepository repository;
     private TagService tagService;
-    private TagMapper tagMapper;
     private GiftCertificateService service;
 
-    private final long ID_ONE = 1L;
+    private static final long ID_1 = 1L;
+    private static final long DURATION_11 = 11L;
+    private static final String TAG_1_NAME = "test1";
+    private static final String CERTIFICATE_1_NAME_OR_DESCRIPTION = "certificate1";
+    private static final String CERTIFICATE_1_NAME_OR_DESCRIPTION_UPD = "certificate1_UPD";
+    private static final BigDecimal PRICE_11_11 = BigDecimal.valueOf(11.11);
 
-    private final Tag TAG_ID_1 = Tag.builder().id(1L).name("test1").build();
-    private final TagDto TAG_DTO_ID_1 = TagDto.builder().id(1L).name("test1").build();
-    private final List<Tag> TAG_LIST = Collections.singletonList(TAG_ID_1);
-    private final List<TagDto> TAG_DTO_LIST = Collections.singletonList(TAG_DTO_ID_1);
+    private static final Tag TAG_ID_1 = Tag.builder()
+            .id(ID_1)
+            .name(TAG_1_NAME)
+            .build();
+
+    private static final TagDto TAG_DTO_ID_1 = TagDto.builder()
+            .id(ID_1)
+            .name(TAG_1_NAME)
+            .build();
+
+    private static final List<Tag> TAG_LIST = Collections.singletonList(TAG_ID_1);
+    private static final List<TagDto> TAG_DTO_LIST = Collections.singletonList(TAG_DTO_ID_1);
 
     private final GiftCertificate certificate = GiftCertificate.builder()
-            .name("certificate1")
-            .description("certificate")
-            .price(BigDecimal.valueOf(11.11))
-            .duration(11L)
+            .name(CERTIFICATE_1_NAME_OR_DESCRIPTION)
+            .description(CERTIFICATE_1_NAME_OR_DESCRIPTION)
+            .price(PRICE_11_11)
+            .duration(DURATION_11)
             .createDate(LocalDateTime.now())
             .lastUpdateDate(LocalDateTime.now())
             .tags(TAG_LIST)
@@ -59,10 +72,10 @@ class GiftCertificateServiceImplTest {
 
     private final GiftCertificate certificateId1 = GiftCertificate.builder()
             .id(1L)
-            .name("certificate1")
-            .description("certificate")
-            .price(BigDecimal.valueOf(11.11))
-            .duration(11L)
+            .name(CERTIFICATE_1_NAME_OR_DESCRIPTION)
+            .description(CERTIFICATE_1_NAME_OR_DESCRIPTION)
+            .price(PRICE_11_11)
+            .duration(DURATION_11)
             .createDate(LocalDateTime.now())
             .lastUpdateDate(LocalDateTime.now())
             .tags(TAG_LIST)
@@ -70,10 +83,10 @@ class GiftCertificateServiceImplTest {
 
     private final GiftCertificate certificateId1Upd = GiftCertificate.builder()
             .id(1L)
-            .name("certificate1_UPD")
-            .description("certificate_UPD")
-            .price(BigDecimal.valueOf(11.11))
-            .duration(11L)
+            .name(CERTIFICATE_1_NAME_OR_DESCRIPTION_UPD)
+            .description(CERTIFICATE_1_NAME_OR_DESCRIPTION_UPD)
+            .price(PRICE_11_11)
+            .duration(DURATION_11)
             .createDate(LocalDateTime.now())
             .lastUpdateDate(LocalDateTime.now())
             .tags(TAG_LIST)
@@ -81,27 +94,27 @@ class GiftCertificateServiceImplTest {
 
     private final GiftCertificateDto certificateId1Dto = GiftCertificateDto.builder()
             .id(1L)
-            .name("certificate1")
-            .description("certificate")
-            .price(BigDecimal.valueOf(11.11))
-            .duration(11L)
+            .name(CERTIFICATE_1_NAME_OR_DESCRIPTION)
+            .description(CERTIFICATE_1_NAME_OR_DESCRIPTION)
+            .price(PRICE_11_11)
+            .duration(DURATION_11)
             .createDate(certificateId1.getCreateDate())
             .lastUpdateDate(certificateId1.getLastUpdateDate())
             .tags(TAG_DTO_LIST)
             .build();
 
     private final GiftCertificateDto certificateId1DtoUpd = GiftCertificateDto.builder()
-            .id(1L)
-            .name("certificate1_UPD")
-            .description("certificate_UPD")
+            .id(ID_1)
+            .name(CERTIFICATE_1_NAME_OR_DESCRIPTION_UPD)
+            .description(CERTIFICATE_1_NAME_OR_DESCRIPTION_UPD)
             .build();
 
     private final GiftCertificateDto certificateId1DtoUpdated = GiftCertificateDto.builder()
-            .id(1L)
-            .name("certificate1_UPD")
-            .description("certificate_UPD")
-            .price(BigDecimal.valueOf(11.11))
-            .duration(11L)
+            .id(ID_1)
+            .name(CERTIFICATE_1_NAME_OR_DESCRIPTION_UPD)
+            .description(CERTIFICATE_1_NAME_OR_DESCRIPTION_UPD)
+            .price(PRICE_11_11)
+            .duration(DURATION_11)
             .createDate(certificateId1.getCreateDate())
             .lastUpdateDate(certificateId1.getLastUpdateDate())
             .tags(TAG_DTO_LIST)
@@ -133,18 +146,17 @@ class GiftCertificateServiceImplTest {
     @Test
     @DisplayName("2: findCertificateById() from GiftCertificate-service")
     void findCertificateById() {
-        given(repository.findById(ID_ONE))
+        given(repository.findById(ID_1))
                 .willReturn(Optional.of(certificateId1));
 
-        GiftCertificateDto byId = service.findCertificateById(ID_ONE);
+        GiftCertificateDto byId = service.findCertificateById(ID_1);
         Assertions.assertEquals(certificateId1Dto, byId);
     }
 
     @Test
     @DisplayName("3: saveCertificate() from GiftCertificate-service")
     void saveCertificate() {
-        String NAME = "certificate1";
-        given(repository.existsByName(NAME))
+        given(repository.existsByName(CERTIFICATE_1_NAME_OR_DESCRIPTION))
                 .willReturn(false);
         given(tagService.findByNameOrSave(TAG_DTO_ID_1))
                 .willReturn(TAG_ID_1);
@@ -158,7 +170,7 @@ class GiftCertificateServiceImplTest {
     @Test
     @DisplayName("4: updateCertificate() from GiftCertificate-service")
     void updateCertificate() {
-        given(repository.findById(ID_ONE))
+        given(repository.findById(ID_1))
                 .willReturn(Optional.of(certificateId1));
         String NAME_UPD = "certificate1_UPD";
         given(repository.existsByName(NAME_UPD))
@@ -166,17 +178,17 @@ class GiftCertificateServiceImplTest {
         given(repository.save(certificateId1Upd))
                 .willReturn(certificateId1Upd);
 
-        GiftCertificateDto dto = service.updateCertificate(ID_ONE, certificateId1DtoUpd);
+        GiftCertificateDto dto = service.updateCertificate(ID_1, certificateId1DtoUpd);
         Assertions.assertEquals(certificateId1DtoUpdated, dto);
     }
 
     @Test
     @DisplayName("5: deleteCertificate() from GiftCertificate-service")
     void deleteCertificate() {
-        given(repository.findById(ID_ONE))
+        given(repository.findById(ID_1))
                 .willReturn(Optional.of(certificateId1));
 
-        service.deleteCertificate(ID_ONE);
+        service.deleteCertificate(ID_1);
         verify(repository, times(1)).delete(certificateId1);
     }
 }

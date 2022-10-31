@@ -31,7 +31,7 @@ public class OrderController {
     }
 
 
-    @GetMapping("/users/user-id")
+    @GetMapping("/users")
     public ResponseEntity<OrderCostAndDateDto> findOrderByUserIdAndOrderId(@RequestParam long userId,
                                                                            @RequestParam long orderId) {
         OrderCostAndDateDto costAndDateOfOrder = orderService.findOrderCostAndDateByUserIdAndOrderId(userId, orderId);

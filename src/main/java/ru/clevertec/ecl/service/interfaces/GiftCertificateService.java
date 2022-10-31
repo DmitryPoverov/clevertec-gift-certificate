@@ -10,27 +10,29 @@ public interface GiftCertificateService {
 
     List<GiftCertificateDto> findCertificates(Pageable pageable);
 
-    GiftCertificateDto findCertificateById(long id);
+    GiftCertificateDto findCertificateById(long giftCertificateId);
 
     List<GiftCertificateDto> findGiftCertificatesByOneTagName(String tagName);
 
-    List<GiftCertificateDto> findCertificatesWithParameters(SearchingDto dto, Pageable pageable);
+    List<GiftCertificateDto> findCertificatesWithParameters(SearchingDto searchingDto, Pageable pageable);
 
-    GiftCertificateDto saveCertificate(GiftCertificateDto dto);
+    GiftCertificateDto saveCertificate(GiftCertificateDto giftCertificateDto);
 
-    GiftCertificateDto updateCertificate(long id, GiftCertificateDto dto);
+    GiftCertificateDto updateCertificate(long giftCertificateId, GiftCertificateDto giftCertificateDto);
 
-    GiftCertificateDto updateCertificateName(long id, GiftCertificateNameDto dto);
+    GiftCertificateDto updateCertificateName(long giftCertificateId, GiftCertificateNameDto giftCertificateNameDto);
 
-    GiftCertificateDto updateCertificateDescription(long id, GiftCertificateDescriptionDto dto);
+    GiftCertificateDto updateCertificateDescription(long giftCertificateId,
+                                                    GiftCertificateDescriptionDto giftCertificateDescriptionDto);
 
-    GiftCertificateDto updateCertificatePrice(long id, GiftCertificatePriceDto dto);
+    GiftCertificateDto updateCertificatePrice(long giftCertificateId, GiftCertificatePriceDto giftCertificatePriceDto);
 
-    GiftCertificateDto updateCertificateDuration(long id, GiftCertificateDurationDto dto);
+    GiftCertificateDto updateCertificateDuration(long giftCertificateId,
+                                                 GiftCertificateDurationDto giftCertificateDurationDto);
 
-    void deleteCertificate(Long id);
+    void deleteCertificate(Long giftCertificateId);
 
-    GiftCertificate findByNameOrSave(GiftCertificateDto dto);
+    GiftCertificate findByNameOrSave(GiftCertificateDto giftCertificateDto);
 
-    List<GiftCertificateDto> findAllGiftCertificatesByTagNames(List<String> names, Pageable pageable);
+    List<GiftCertificateDto> findAllGiftCertificatesByTagNames(List<String> tagNames, Pageable pageable);
 }
