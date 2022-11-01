@@ -8,7 +8,15 @@ plugins {
 
 group = 'ru.clevertec'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+/*jar {
+    manifest {
+        attributes (
+                'Main-Class': 'ru.clevertec.ecl'
+        )
+    }
+}*/
 
 configurations {
     compileOnly {
@@ -29,6 +37,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.flywaydb:flyway-core'
 
     implementation 'org.mapstruct:mapstruct:1.5.2.Final'
 
