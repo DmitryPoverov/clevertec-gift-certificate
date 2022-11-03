@@ -21,10 +21,9 @@
 	}
 
 3) PATCH
-- http://localhost:8083/api/v1/tags
+- http://localhost:8083/api/v1/tags/34
 - - JSON example: 
 {
-        "id": 34,
         "name": "new name to update tag name"
     }
 

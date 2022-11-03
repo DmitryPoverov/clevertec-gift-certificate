@@ -58,7 +58,7 @@ public class TagServiceImpl implements TagService {
         }
 
         tagMapper.updateFromDto(tagFromDB, dto);
-
+        tagFromDB.setId(id);
         Tag savedTad = tagRepository.save(tagFromDB);
         return tagMapper.tagToDto(savedTad);
     }

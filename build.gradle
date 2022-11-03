@@ -1,5 +1,5 @@
 plugins {
-    id "org.flywaydb.flyway" version "9.1.2"
+    id "org.flywaydb.flyway" version "9.7.0"
     id 'org.springframework.boot' version '2.7.4'
     id 'io.spring.dependency-management' version '1.0.14.RELEASE'
     id 'org.asciidoctor.convert' version '1.5.8'
@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'ru.clevertec'
-version = '0.0.1-SNAPSHOT'
+version = '1.0-SNAPSHOT'
 sourceCompatibility = JavaVersion.VERSION_1_8
 
 /*jar {
