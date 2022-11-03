@@ -1,6 +1,7 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/clevertec-gift-certificate
+    url: jdbc:postgresql://${HOST}:5432/
+#    url: jdbc:postgresql://localhost:5432/clevertec-gift-certificate
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver

@@ -6,3 +6,6 @@ logging:
     name: logs/gift-certificate.log
     path: /
 
+spring:
+  profiles:
+    active: prod

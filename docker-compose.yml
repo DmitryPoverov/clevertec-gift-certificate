@@ -1,0 +1,40 @@
+version: "3.5"
+services:
+
+  postgres:
+    container_name: postgres
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+
+  postgres2:
+    container_name: postgres2
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+
+  app1:
+    build: .
+    command: java -jar certificate-service.jar
+    depends_on:
+      - postgres
+    ports:
+      - "8083:8083"
+    environment:
+      HOST: postgres
+
+  app2:
+    build: .
+    command: java -jar certificate-service.jar
+    depends_on:
+      - postgres2
+    ports:
+      - "8084:8083"
+    environment:
+          HOST: postgres2
