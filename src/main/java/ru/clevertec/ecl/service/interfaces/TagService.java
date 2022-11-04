@@ -19,4 +19,6 @@ public interface TagService {
     void deleteTag(Long id);
 
     Tag findByNameOrSave(TagDto dto);
+
+    TagDto findMostPopularAndExpensiveTag();
 }

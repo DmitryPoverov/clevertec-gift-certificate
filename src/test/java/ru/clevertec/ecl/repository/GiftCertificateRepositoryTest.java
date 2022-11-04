@@ -23,18 +23,51 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 class GiftCertificateRepositoryTest {
 
+    private static final int ZERO = 0;
+    private static final long ONE = 1L;
+    private static final int TWO = 2;
+    private static final int THREE = 3;
+    private static final int TEN = 10;
+    private static final long ELEVEN = 11L;
+    private static final long EIGHTY_EIGHT = 88L;
+    private static final String DESCRIPTION = "one free massage";
+    private static final String STRING_ID = "id";
+    private static final String STRING_AL = "al";
+    private static final String STRING_SPORT = "sport_test";
+    private static final String STRING_ANIMAL = "animal_test";
+    private static final String STRING_EXTREME = "extreme_test";
+    private static final String NAME = "massage White lotus_test";
+    private static final String TEST_NAME = "Test_certificate_name";
+    private static final String TEST_DESCRIPTION = "Test_certificate_description";
+    private static final BigDecimal PRICE_11_11 = BigDecimal.valueOf(11.11);
+    private static final LocalDateTime DATE = LocalDateTime.parse("2022-09-27T11:11");
+
     @Autowired
     private GiftCertificateRepository repository;
 
-    private final GiftCertificate certificate1 = GiftCertificate.builder().id(1L).name("massage White lotus_test")
-            .description("one free massage").price(BigDecimal.valueOf(11.11)).duration(11)
-            .createDate(LocalDateTime.parse("2022-09-27T11:11"))
-            .lastUpdateDate(LocalDateTime.parse("2022-09-27T11:11")).build();
+    private final GiftCertificate certificate = GiftCertificate.builder()
+            .name(TEST_NAME)
+            .description(TEST_DESCRIPTION)
+            .price(PRICE_11_11)
+            .duration(EIGHTY_EIGHT)
+            .createDate(DATE)
+            .lastUpdateDate(DATE)
+            .build();
+
+    private final GiftCertificate certificateId1 = GiftCertificate.builder()
+            .id(ONE)
+            .name(NAME)
+            .description(DESCRIPTION)
+            .price(PRICE_11_11)
+            .duration(ELEVEN)
+            .createDate(DATE)
+            .lastUpdateDate(DATE)
+            .build();
 
     @Test
     @DisplayName("1: findAll() from GiftCertificate-repository")
     public void testShouldFindFirstTwoCertificatesAndReturnThem() {
-        Pageable pageable = PageRequest.of(0, 2, Sort.by("id").ascending());
+        Pageable pageable = PageRequest.of(ZERO, TWO, Sort.by(STRING_ID).ascending());
         List<GiftCertificate> actual = repository.findAll(pageable).getContent();
         assertNotNull(actual);
     }
@@ -42,16 +75,14 @@ class GiftCertificateRepositoryTest {
     @Test
     @DisplayName("2: findById() from GiftCertificate-repository")
     void testShouldFindTagById() {
-        GiftCertificate byId = repository.findById(1L).orElseThrow(RuntimeException::new);
-        assertEquals(certificate1, byId);
+        GiftCertificate byId = repository.findById(ONE).orElseThrow(RuntimeException::new);
+        assertEquals(certificateId1, byId);
     }
 
     @Test
     @DisplayName("3: existsByName() from GiftCertificate-repository")
     void testShouldFindOutDoesCertificateExistsByName() {
-        String name = "massage White lotus_test";
-
-        assertTrue(repository.existsByName(name));
+        assertTrue(repository.existsByName(NAME));
     }
 
     @Test
@@ -59,34 +90,29 @@ class GiftCertificateRepositoryTest {
     @Transactional
     @Rollback
     void testShouldSaveNewCertificate() {
-        GiftCertificate certificate = GiftCertificate.builder().name("Certificate_name_test")
-                .description("Certificate_description_test").price(BigDecimal.valueOf(88.88)).duration(88)
-                .createDate(LocalDateTime.parse("2022-09-27T11:11"))
-                .lastUpdateDate(LocalDateTime.parse("2022-09-27T11:11")).build();
-
         GiftCertificate save = repository.save(certificate);
-        assertNotEquals(0 ,save.getId());
+        assertNotEquals(ZERO ,save.getId());
     }
 
     @Test
     @DisplayName("5: findCertificatesByTagName() from GiftCertificate-repository")
     public void testShouldFindCertificateByTagNameAndReturnNotNull() {
-        List<GiftCertificate> certificates = repository.findCertificatesByTagName("extreme_test");
-        assertEquals(2, certificates.size());
+        List<GiftCertificate> certificates = repository.findCertificatesByTagName(STRING_EXTREME);
+        assertEquals(TWO, certificates.size());
     }
 
     @Test
     @DisplayName("6: findCertificatesByPartOfNameOrDescription() from GiftCertificate-repository")
     public void testShouldFindCertificateByPartOfNameOrDescription() {
         List<GiftCertificate> certificates = repository.findCertificatesWithParameters
-                ("sport_test", "al", null,  Pageable.ofSize(10)).getContent();
-        assertEquals(2, certificates.size());
+                (STRING_SPORT, STRING_AL, null,  Pageable.ofSize(TEN)).getContent();
+        assertEquals(TWO, certificates.size());
     }
 
     @Test
     @DisplayName("7: findCertificatesByAFewTagNames() from GiftCertificate-repository")
     public void testShouldFindCertificateByTagsAndNameIsIn() {
-        List<GiftCertificate> certificates = repository.findByTags_NameIsIn(Arrays.asList("extreme_test", "animal_test"));
-        assertEquals(3, certificates.size());
+        List<GiftCertificate> certificates = repository.findByTags_NameIsIn(Arrays.asList(STRING_EXTREME, STRING_ANIMAL));
+        assertEquals(THREE, certificates.size());
     }
 }

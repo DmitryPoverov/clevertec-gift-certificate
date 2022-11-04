@@ -26,108 +26,126 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class TagServiceImplTest {
 
-//    private static final TagMapper mapper = Mappers.getMapper(TagMapper.class);
-    private TagMapper mapper;
-    private TagServiceImpl service;
-    private TagRepository repository;
+    private TagMapper tagMapper;
+    private TagServiceImpl tagService;
+    private TagRepository tagRepository;
 
-    private static final long ID_ONE = 1;
+    private static final int SIZE_2 = 2;
+    private static final long ID_1L = 1L;
+    private static final String TEST_1_NAME = "test1";
+    private static final String TEST_1_NAME_UPD = "test1_UPDATED";
 
-    private static final Tag TAG = Tag.builder().name("test1").build();
-    private static final Tag TAG_ID_1 = Tag.builder().id(1L).name("test1").build();
-    private static final Tag TAG_ID_1_UPDATED = Tag.builder().id(1L).name("test1_UPDATED").build();
+    private static final Tag TAG_WITHOUT_ID = Tag.builder()
+            .name(TEST_1_NAME)
+            .build();
+    private static final Tag TAG_ID_1 = Tag.builder()
+            .id(ID_1L)
+            .name(TEST_1_NAME)
+            .build();
+    private static final Tag TAG_ID_1_UPDATED = Tag.builder()
+            .id(ID_1L)
+            .name(TEST_1_NAME_UPD)
+            .build();
 
-    private static final TagDto DTO = TagDto.builder().name("test1").build();
-    private static final TagDto DTO_ID_1 = TagDto.builder().id(1L).name("test1").build();
-    private static final TagDto DTO_ID_1_UPDATED = TagDto.builder().id(1L).name("test1_UPDATED").build();
+    private static final TagDto DTO_WITHOUT_ID = TagDto.builder()
+            .name(TEST_1_NAME)
+            .build();
+    private static final TagDto DTO_ID_1 = TagDto.builder()
+            .id(ID_1L)
+            .name(TEST_1_NAME)
+            .build();
+    private static final TagDto DTO_ID_1_UPDATED = TagDto.builder()
+            .id(ID_1L)
+            .name(TEST_1_NAME_UPD)
+            .build();
 
     private static final List<Tag> TAG_LIST = Collections.singletonList(TAG_ID_1);
     private static final List<TagDto> DTO_LIST = Collections.singletonList(DTO_ID_1);
 
-    private static final Page<Tag> TAG_PAGE = new PageImpl<>(TAG_LIST);
-    private static final Pageable pageable = Pageable.ofSize(2);
+    private static final Page<Tag> PAGE_OF_TAGS = new PageImpl<>(TAG_LIST);
+    private static final Pageable PAGEABLE_SIZE_2 = Pageable.ofSize(SIZE_2);
 
     @BeforeEach
     void beforeEach() {
-        mapper = Mockito.mock(TagMapper.class);
-        repository = Mockito.mock(TagRepository.class);
-        service = new TagServiceImpl(repository, mapper);
+        tagMapper = Mockito.mock(TagMapper.class);
+        tagRepository = Mockito.mock(TagRepository.class);
+        tagService = new TagServiceImpl(tagRepository, tagMapper);
     }
 
     @Test
     @DisplayName("1 Unit test: findAllTags() from Tag-service")
     void testShouldReturnListWithOneTag() {
-        given(repository.findAll(pageable))
-                .willReturn(TAG_PAGE);
-        given(mapper.tagToDto(TAG_ID_1))
+        given(tagRepository.findAll(PAGEABLE_SIZE_2))
+                .willReturn(PAGE_OF_TAGS);
+        given(tagMapper.tagToDto(TAG_ID_1))
                 .willReturn(DTO_ID_1);
 
-        List<TagDto> allTags = service.findAllTags(pageable);
+        List<TagDto> allTags = tagService.findAllTags(PAGEABLE_SIZE_2);
         Assertions.assertEquals(DTO_LIST, allTags);
     }
 
     @Test
     @DisplayName("2 Unit test: getTagById() from Tag-service")
     void testShouldFindTagDtoById() {
-        given(repository.findById(1L))
+        given(tagRepository.findById(ID_1L))
                 .willReturn(Optional.of(TAG_ID_1));
-        given(mapper.tagToDto(TAG_ID_1))
+        given(tagMapper.tagToDto(TAG_ID_1))
                 .willReturn(DTO_ID_1);
 
-        TagDto tagById = service.findTagById(ID_ONE);
+        TagDto tagById = tagService.findTagById(ID_1L);
         Assertions.assertEquals(DTO_ID_1, tagById);
     }
 
     @Test
     @DisplayName("3 Unit test: saveTag() from Tag-service")
     void testShouldSaveTag() {
-        given(repository.save(TAG))
+        given(tagRepository.save(TAG_WITHOUT_ID))
                 .willReturn(TAG_ID_1);
-        given(repository.existsByName(TAG.getName()))
+        given(tagRepository.existsByName(TAG_WITHOUT_ID.getName()))
                 .willReturn(false);
-        given(mapper.dtoToTag(DTO))
-                .willReturn(TAG);
-        given(mapper.tagToDto(TAG_ID_1))
+        given(tagMapper.dtoToTag(DTO_WITHOUT_ID))
+                .willReturn(TAG_WITHOUT_ID);
+        given(tagMapper.tagToDto(TAG_ID_1))
                 .willReturn(DTO_ID_1);
 
-        TagDto saveTag = service.saveTag(DTO);
+        TagDto saveTag = tagService.saveTag(DTO_WITHOUT_ID);
         Assertions.assertEquals(DTO_ID_1, saveTag);
     }
 
     @Test
     @DisplayName("4 Unit test: updateTag() from Tag-service")
     void testShouldUpdateTag() {
-        given(repository.findById(ID_ONE))
+        given(tagRepository.findById(ID_1L))
                 .willReturn(Optional.of(TAG_ID_1));
-        given(repository.existsByName(any()))
+        given(tagRepository.existsByName(any()))
                 .willReturn(false);
-        given(repository.save(any()))
+        given(tagRepository.save(any()))
                 .willReturn(TAG_ID_1_UPDATED);
 
-        doNothing().when(mapper)
+        doNothing().when(tagMapper)
                 .updateFromDto(TAG_ID_1, DTO_ID_1_UPDATED);
-        given(mapper.tagToDto(any()))
+        given(tagMapper.tagToDto(any()))
                 .willReturn(DTO_ID_1_UPDATED);
 
-        TagDto updateTag = service.updateTag(ID_ONE, DTO_ID_1_UPDATED);
+        TagDto updateTag = tagService.updateTag(ID_1L, DTO_ID_1_UPDATED);
         Assertions.assertEquals(DTO_ID_1_UPDATED, updateTag);
     }
 
     @Test
     @DisplayName("5 Unit test: deleteTag() from Tag-service")
     void testShouldDeleteTagById() {
-        given(repository.findById(ID_ONE))
+        given(tagRepository.findById(ID_1L))
                 .willReturn(Optional.of(TAG_ID_1));
-        service.deleteTag(ID_ONE);
-        verify(repository, times(1)).delete(TAG_ID_1);
+        tagService.deleteTag(ID_1L);
+        verify(tagRepository, times(1)).delete(TAG_ID_1);
     }
 
     @Test
     @DisplayName("6 Unit test: findByNameOrSave() from Tag-service")
     void testShouldFindByName() {
-        given(repository.findByName(DTO_ID_1.getName()))
+        given(tagRepository.findByName(DTO_ID_1.getName()))
                 .willReturn(Optional.of(TAG_ID_1));
-        Tag byNameOrSave = service.findByNameOrSave(DTO_ID_1);
+        Tag byNameOrSave = tagService.findByNameOrSave(DTO_ID_1);
         Assertions.assertEquals(TAG_ID_1, byNameOrSave);
     }
 }

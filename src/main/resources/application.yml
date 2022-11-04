@@ -3,9 +3,6 @@ server:
 
 logging:
   file:
-    name: gift-certificate.log
+    name: logs/gift-certificate.log
     path: /
 
-#spring:
-#  profiles:
-#    active:
